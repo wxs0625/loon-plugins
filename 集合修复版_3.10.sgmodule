@@ -1,9 +1,9 @@
 ﻿#!name=集合修复版 3.10
-#!desc=基于 3.9 修复：移除闪动校园广告重写避免 SDK 收空对象闪退，增强京东和百度网盘开屏广告拦截
+#!desc=使用 3.10：移除闪动校园广告 SDK reject-dict 崩溃规则，新增京东开屏广告屏蔽规则。百度网盘规则在 3.6 已有，无需重复添加。
 #!author=fmz200, local merge
 #!homepage=https://github.com/fmz200/wool_scripts
 #!icon=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/gif/naisi-01.gif
-#!date=2026-08-12 23:31:32
+#!date=2026-08-12 23:41:48
 
 # Based on v2 and merged with weibo.module
 
@@ -3035,14 +3035,9 @@ DOMAIN,datacollection.uve.weibo.com,REJECT
 DOMAIN,adpinpai.video.weibocdn.com,REJECT
 
 [URL Rewrite]
-# === 浜笢寮€灞忓箍鍛婂寮?===
+# === 京东开屏广告增强 ===
 ^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=queryMaterialAdverts - reject
-^https?:\/\/(bdsp-x|dsp-x)\.jd\.com\/adx\/sdk\/open - reject
 ^https?:\/\/img\d+\.360buyimg\.com\/jddjadvertise\/ - reject
-# === 鐧惧害缃戠洏寮€灞忓箍鍛婂寮?===
-^https?:\/\/issuecdn\.baidupcs\.com\/issue\/netdisk\/guanggao\/ - reject
-^https?:\/\/staticsns\.cdn\.bcebos\.com\/amis\/.+\/banner\.png - reject
-^https?:\/\/d3g6o6c6r6f4\.cdn\.bcebos\.com\/.+\.mp4 - reject
 ^(http:\/\/www\.vgtime\.com\/app\/topic\/\d+\.jhtml\?.*?&close_ad=)false(&page=\d&sign=\w+&timestamp=\d+&font_size=\d$) $1true$2 - 302
 ^http:\/\/.+\.gamersky\.com\/.+\/adSystem\/ad\/.+ - reject-dict
 ^http:\/\/101\.42\.130\.147\/httpdns\/resolve\/ - reject

@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 
 function ConvertFrom-Utf8Base64 {
     param([string]$Value)
@@ -8,7 +8,7 @@ function ConvertFrom-Utf8Base64 {
 $sourceName = ConvertFrom-Utf8Base64 '6ZuG5ZCI5L+u5aSN54mIXzMuOS5zZ21vZHVsZQ=='
 $outputName = ConvertFrom-Utf8Base64 '6ZuG5ZCI5L+u5aSN54mIXzMuMTAuc2dtb2R1bGU='
 $displayName = ConvertFrom-Utf8Base64 '6ZuG5ZCI5L+u5aSN54mIIDMuMTA='
-$description = ConvertFrom-Utf8Base64 '5Z+65LqOIDMuOSDkv67lpI3vvJrnp7vpmaTpl6rliqjmoKHlm63lub/lkYrph43lhpnpgb/lhY0gU0RLIOaUtuepuuWvueixoemXqumAgO+8jOWinuW8uuS6rOS4nOWSjOeZvuW6pue9keebmOW8gOWxj+W5v+WRiuaLpuaIqg=='
+$description = ConvertFrom-Utf8Base64 '5L2/55SoIDMuMTDvvJrnp7vpmaTpl6rliqjmoKHlm63lub/lkYogU0RLIHJlamVjdC1kaWN0IOW0qea6g+inhOWIme+8jOaWsOWinuS6rOS4nOW8gOWxj+W5v+WRiuWxj+iUveinhOWImeOAgueZvuW6pue9keebmOinhOWImeWcqCAzLjYg5bey5pyJ77yM5peg6ZyA6YeN5aSN5re75Yqg44CC'
 $sourceModule = Join-Path $PSScriptRoot $sourceName
 $outputFile = Join-Path $PSScriptRoot $outputName
 
@@ -35,15 +35,10 @@ $null = $removeRewriteLines.Add('^http:\/\/ad\.shunchangzhixing\.com\/getAd(?:\?
 
 $jdAdRewrites = @(
     '^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=queryMaterialAdverts - reject',
-    '^https?:\/\/(bdsp-x|dsp-x)\.jd\.com\/adx\/sdk\/open - reject',
     '^https?:\/\/img\d+\.360buyimg\.com\/jddjadvertise\/ - reject'
 )
 
-$baiduAdRewrites = @(
-    '^https?:\/\/issuecdn\.baidupcs\.com\/issue\/netdisk\/guanggao\/ - reject',
-    '^https?:\/\/staticsns\.cdn\.bcebos\.com\/amis\/.+\/banner\.png - reject',
-    '^https?:\/\/d3g6o6c6r6f4\.cdn\.bcebos\.com\/.+\.mp4 - reject'
-)
+$baiduAdRewrites = @()
 
 foreach ($line in $lines) {
     $trimmed = $line.Trim()
@@ -72,15 +67,19 @@ foreach ($line in $lines) {
     }
 
     if ($section -eq 'URL Rewrite' -and -not $adRewritesInserted -and $trimmed -ne '' -and -not $trimmed.StartsWith('#')) {
-        $output.Add('# === 京东开屏广告增强 ===')
-        foreach ($r in $jdAdRewrites) {
-            $output.Add($r)
-            $addedJdRewrites++
+        if ($jdAdRewrites.Count -gt 0) {
+            $output.Add('# === 京东开屏广告增强 ===')
+            foreach ($r in $jdAdRewrites) {
+                $output.Add($r)
+                $addedJdRewrites++
+            }
         }
-        $output.Add('# === 百度网盘开屏广告增强 ===')
-        foreach ($r in $baiduAdRewrites) {
-            $output.Add($r)
-            $addedBaiduRewrites++
+        if ($baiduAdRewrites.Count -gt 0) {
+            $output.Add('# === 百度网盘开屏广告增强 ===')
+            foreach ($r in $baiduAdRewrites) {
+                $output.Add($r)
+                $addedBaiduRewrites++
+            }
         }
         $adRewritesInserted = $true
     }
